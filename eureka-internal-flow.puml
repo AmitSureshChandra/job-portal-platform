@@ -1,0 +1,89 @@
+@startuml Eureka Server Internal Working
+
+!theme plain
+skinparam backgroundColor #FFFFFF
+'skinparam handwritten true
+
+title Eureka Server Internal Working Flow
+
+actor "Service Instance" as SI
+participant "Eureka Client" as EC
+participant "REST Endpoint" as REST
+participant "Service Registry" as SR
+participant "Peer Replication" as PR
+participant "Self Preservation" as SP
+participant "Eviction Task" as ET
+database "In-Memory Registry" as DB
+
+== Service Registration ==
+SI -> EC: Start Application
+EC -> REST: POST /eureka/apps/{app-name}
+REST -> SR: Register Instance
+SR -> DB: Store Instance Info
+SR -> PR: Replicate to Peers
+REST --> EC: Registration Success
+note right: Instance Status: UP
+
+== Heartbeat Mechanism ==
+loop Every 30 seconds
+    EC -> REST: PUT /eureka/apps/{app}/{instance-id}
+    REST -> SR: Update Last Renewal
+    SR -> DB: Update Timestamp
+    REST --> EC: Heartbeat ACK
+end
+
+== Service Discovery ==
+SI -> EC: @FeignClient("user-service")
+EC -> REST: GET /eureka/apps/{app-name}
+REST -> SR: Fetch Service Instances
+SR -> DB: Query Registry
+DB --> SR: Return Instance List
+SR --> REST: Filtered Healthy Instances
+REST --> EC: Service Locations
+EC --> SI: Load Balanced Instance
+
+== Health Monitoring ==
+loop Every 60 seconds
+    ET -> SR: Check Instance Health
+    SR -> DB: Find Expired Instances
+    alt Instance Expired (>90s)
+        SR -> SP: Check Self Preservation
+        alt Self Preservation OFF
+            SR -> DB: Remove Instance
+            SR -> PR: Replicate Removal
+            note right: Instance Evicted
+        else Self Preservation ON
+            note right: Keep Instance (Network Partition Protection)
+        end
+    end
+end
+
+== Peer Synchronization ==
+participant "Eureka Peer" as EP
+SR -> PR: Replicate Registry Changes
+PR -> EP: Sync Instance Data
+EP --> PR: ACK Replication
+note right: Multi-Zone HA
+
+== Client Cache Refresh ==
+loop Every 30 seconds
+    EC -> REST: GET /eureka/apps/delta
+    REST -> SR: Get Registry Delta
+    SR -> DB: Fetch Changes Since Last Poll
+    DB --> SR: Delta Response
+    SR --> REST: Changed Instances Only
+    REST --> EC: Update Local Cache
+    note left: Reduces Network Traffic
+end
+
+== Self Preservation Mode ==
+alt Network Partition Detected
+    SR -> SP: Enable Self Preservation
+    note over SP: Stop Evicting Instances\nPrevent Cascade Failures
+    SP -> SR: Preserve All Instances
+else Network Stable
+    SR -> SP: Disable Self Preservation
+    SP -> SR: Resume Normal Eviction
+end
+
+@enduml

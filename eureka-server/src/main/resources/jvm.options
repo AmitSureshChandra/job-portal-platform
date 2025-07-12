@@ -1,0 +1,8 @@
+-Ddd.trace.enabled=true
+-Ddd.service.name=eureka-server
+-Ddd.env=development
+-Ddd.version=1.0.0
+-Ddd.appsec.enabled=false
+-Ddd.profiling.enabled=false
+-Ddd.remote_config.enabled=false
+-Ddd.logs.injection=true

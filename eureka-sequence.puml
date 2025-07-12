@@ -1,0 +1,83 @@
+@startuml Eureka Service Lifecycle
+
+!theme plain
+skinparam backgroundColor #FFFFFF
+
+title Service Lifecycle in Eureka
+
+participant "User Service" as US
+participant "Eureka Client" as EC
+participant "Eureka Server" as ES
+participant "Job Service" as JS
+participant "Registry Cache" as RC
+
+== Service Startup & Registration ==
+US -> EC: Application Start
+activate EC
+EC -> ES: POST /eureka/apps/USER-SERVICE
+note right: Instance Info:\n- hostname: localhost\n- port: 8081\n- status: STARTING
+ES -> ES: Validate Registration
+ES -> RC: Update Cache
+ES --> EC: 204 No Content
+EC --> US: Registration Complete
+note over US: Status: UP
+
+== Heartbeat Maintenance ==
+loop Every 30 seconds
+    EC -> ES: PUT /eureka/apps/USER-SERVICE/localhost:8081
+    note right: Renewal Request
+    ES -> ES: Update lastRenewalTimestamp
+    ES --> EC: 200 OK
+end
+
+== Service Discovery by Job Service ==
+JS -> JS: @FeignClient("USER-SERVICE")
+JS -> ES: GET /eureka/apps/USER-SERVICE
+ES -> RC: Check Cache
+alt Cache Hit
+    RC --> ES: Cached Response
+else Cache Miss
+    ES -> ES: Query Registry
+    ES -> RC: Update Cache
+end
+ES --> JS: Instance List
+note left: [{\n  "hostname": "localhost",\n  "port": 8081,\n  "status": "UP"\n}]
+
+== Service Call with Load Balancing ==
+JS -> JS: Choose Instance (Round Robin)
+JS -> US: HTTP Request to localhost:8081
+US --> JS: Response
+note over JS: Successful Service Call
+
+== Service Shutdown ==
+US -> EC: Shutdown Hook
+EC -> ES: DELETE /eureka/apps/USER-SERVICE/localhost:8081
+ES -> ES: Mark Instance as DOWN
+ES -> RC: Invalidate Cache
+ES --> EC: 200 OK
+deactivate EC
+note over US: Graceful Shutdown
+
+== Failure Scenario ==
+US -> US: Service Crashes
+note over US: No Heartbeat Sent
+
+loop Eviction Check (Every 60s)
+    ES -> ES: Check Renewal Timestamps
+    alt Last Renewal > 90 seconds
+        ES -> ES: Mark for Eviction
+        ES -> RC: Remove from Cache
+        note right: Instance Evicted
+    end
+end
+
+== Recovery Scenario ==
+US -> EC: Service Restart
+activate EC
+EC -> ES: POST /eureka/apps/USER-SERVICE
+ES -> ES: Re-register Instance
+ES -> RC: Update Cache
+ES --> EC: Registration Success
+note over US: Service Back Online
+
+@enduml

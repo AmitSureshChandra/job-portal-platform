@@ -1,0 +1,90 @@
+@startuml Eureka Architecture Components
+
+!theme plain
+skinparam backgroundColor #FFFFFF
+
+title Eureka Server Architecture & Components
+
+package "Eureka Server" {
+    [REST API Layer] as REST
+    [Service Registry] as REGISTRY
+    [Peer Replication] as PEER
+    [Self Preservation] as PRESERVE
+    [Eviction Scheduler] as EVICT
+    [Response Cache] as CACHE
+}
+
+package "In-Memory Storage" {
+    database "Registry Map" as REGMAP {
+        - Application Name
+        - Instance ID
+        - Status (UP/DOWN/OUT_OF_SERVICE)
+        - Last Renewal Timestamp
+        - Metadata
+    }
+    
+    database "Response Cache" as RESCACHE {
+        - Full Registry
+        - Delta Changes
+        - Application Specific
+        - Compressed Payloads
+    }
+}
+
+package "Eureka Clients" {
+    [User Service] as USER
+    [Job Service] as JOB
+    [Company Service] as COMPANY
+    [API Gateway] as GATEWAY
+}
+
+package "External Systems" {
+    [Eureka Peer Nodes] as PEERS
+    [Load Balancer] as LB
+    [Monitoring] as MON
+}
+
+' REST API Interactions
+USER --> REST : Register/Heartbeat/Discover
+JOB --> REST : Register/Heartbeat/Discover
+COMPANY --> REST : Register/Heartbeat/Discover
+GATEWAY --> REST : Discover Services
+
+' Internal Components
+REST --> REGISTRY : Process Requests
+REGISTRY --> REGMAP : Store/Retrieve
+REGISTRY --> CACHE : Update Cache
+CACHE --> RESCACHE : Cache Responses
+REGISTRY --> PEER : Replicate Changes
+REGISTRY --> PRESERVE : Check Protection
+EVICT --> REGISTRY : Remove Expired
+PRESERVE --> EVICT : Control Eviction
+
+' External Interactions
+PEER --> PEERS : Sync Registry
+REST --> LB : Health Checks
+REGISTRY --> MON : Metrics/Events
+
+note top of REGMAP
+    Key: APP_NAME/INSTANCE_ID
+    Value: InstanceInfo
+    - hostname, port, status
+    - lastRenewalTimestamp
+    - metadata map
+end note
+
+note top of RESCACHE
+    Levels:
+    1. ReadOnly Cache (30s TTL)
+    2. ReadWrite Cache (3min TTL)
+    3. Registry Store
+end note
+
+note right of PRESERVE
+    Triggers when:
+    - Heartbeat renewal < 85%
+    - Network partition detected
+    - Prevents cascade failures
+end note
+
+@enduml

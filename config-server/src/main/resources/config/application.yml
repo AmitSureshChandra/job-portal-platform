@@ -1,0 +1,17 @@
+# Global configuration for all services
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+logging:
+  level:
+    com.jobportal: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,refresh

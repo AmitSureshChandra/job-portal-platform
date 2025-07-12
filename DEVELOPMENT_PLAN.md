@@ -20,12 +20,12 @@
   - [x] Company search and listing
   - [x] Link companies to recruiter users
 
-- [ ] **job-service** - Job postings, search, and management
-  - [ ] Job entity (title, description, requirements, salary, location)
-  - [ ] Job posting APIs (CRUD)
-  - [ ] Job search and filtering
-  - [ ] Link jobs to companies
-  - [ ] Job status management
+- [x] **job-service** - Job postings, search, and management
+  - [x] Job entity (title, description, requirements, salary, location)
+  - [x] Job posting APIs (CRUD)
+  - [x] Job search and filtering
+  - [x] Link jobs to companies
+  - [x] Job status management
 
 - [ ] **application-service** - Job applications and tracking
   - [ ] Application entity (user, job, status, applied date)
@@ -53,19 +53,19 @@
   - [ ] Rate limiting
   - [ ] Request/response logging
 
-## Current Focus: Job Service
+## Current Focus: Application Service
 
 ### Next Steps:
-1. Create job-service module structure
-2. Implement Job entity and repository
-3. Create job posting and management APIs
-4. Add job search functionality
-5. Link jobs to companies
+1. Create application-service module structure
+2. Implement Application entity and repository
+3. Create job application APIs
+4. Add application tracking functionality
+5. Link applications to users and jobs
 
 ## Database Schema Progress:
 - [x] Users table (user-service)
 - [x] Companies table (company-service)
-- [ ] Jobs table (job-service)
+- [x] Jobs table (job-service)
 - [ ] Applications table (application-service)
 
 ## API Endpoints Completed:
@@ -79,7 +79,13 @@
 - [x] GET /api/companies/owner/{ownerId}
 - [x] GET /api/companies/search
 
+## API Endpoints Completed:
+- [x] POST /api/jobs
+- [x] GET /api/jobs/{id}
+- [x] GET /api/jobs/company/{companyId}
+- [x] GET /api/jobs/search
+- [x] GET /api/jobs/active
+- [x] PUT /api/jobs/{id}/status
+
 ## API Endpoints Planned:
-- [ ] POST /api/jobs
-- [ ] GET /api/jobs/search
 - [ ] POST /api/applications/apply

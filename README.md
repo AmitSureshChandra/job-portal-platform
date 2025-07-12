@@ -20,7 +20,7 @@ A multi-module microservices-based job portal platform similar to Naukari, built
 - Spring Boot 3.2.0
 - Spring Cloud 2023.0.0
 - Gradle 8.5
-- MySQL (for data persistence)
+- Postgres (for data persistence)
 - Elasticsearch (for search)
 - Kafka (for messaging)
 

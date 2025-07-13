@@ -41,11 +41,11 @@
   - [x] Search analytics and suggestions
   - [x] Full-text search capabilities
 
-- [ ] **notification-service** - Email/SMS notifications via Kafka
-  - [ ] Kafka integration
-  - [ ] Email notification templates
-  - [ ] Application status notifications
-  - [ ] Job alert notifications
+- [x] **notification-service** - Email/SMS notifications via Kafka
+  - [x] Kafka integration
+  - [x] Email notification templates
+  - [x] Application status notifications
+  - [x] Job alert notifications
 
 - [ ] **api-gateway** - Single entry point and security
   - [ ] Request routing to services
@@ -53,14 +53,14 @@
   - [ ] Rate limiting
   - [ ] Request/response logging
 
-## Current Focus: Notification Service
+## Current Focus: API Gateway
 
 ### Next Steps:
-1. Create notification-service module structure
-2. Implement Kafka integration
-3. Create email notification templates
-4. Add application status notifications
-5. Implement job alert notifications
+1. Create api-gateway module structure
+2. Implement request routing to services
+3. Add authentication and authorization
+4. Implement rate limiting
+5. Add request/response logging
 
 ## Database Schema Progress:
 - [x] Users table (user-service)

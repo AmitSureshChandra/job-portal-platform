@@ -1,0 +1,20 @@
+server:
+  port: 8086
+
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:akumar00029@gmail.com}
+    password: ${MAIL_PASSWORD:haxs fgvf lmnf reef}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: notification-group
+      auto-offset-reset: earliest

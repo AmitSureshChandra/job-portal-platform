@@ -35,11 +35,11 @@
   - [x] Application management for recruiters
 
 ### Phase 3: Advanced Features
-- [ ] **search-service** - Advanced search using Elasticsearch
-  - [ ] Elasticsearch integration
-  - [ ] Advanced job search with filters
-  - [ ] Search analytics and suggestions
-  - [ ] Full-text search capabilities
+- [x] **search-service** - Advanced search using Elasticsearch
+  - [x] Elasticsearch integration
+  - [x] Advanced job search with filters
+  - [x] Search analytics and suggestions
+  - [x] Full-text search capabilities
 
 - [ ] **notification-service** - Email/SMS notifications via Kafka
   - [ ] Kafka integration
@@ -53,14 +53,14 @@
   - [ ] Rate limiting
   - [ ] Request/response logging
 
-## Current Focus: Search Service
+## Current Focus: Notification Service
 
 ### Next Steps:
-1. Create search-service module structure
-2. Implement Elasticsearch integration
-3. Create advanced job search APIs
-4. Add search analytics and suggestions
-5. Implement full-text search capabilities
+1. Create notification-service module structure
+2. Implement Kafka integration
+3. Create email notification templates
+4. Add application status notifications
+5. Implement job alert notifications
 
 ## Database Schema Progress:
 - [x] Users table (user-service)

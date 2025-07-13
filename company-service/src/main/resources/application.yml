@@ -2,11 +2,30 @@ spring:
   application:
     name: company-service
   config:
-    import: configserver:http://localhost:8888
+    import: optional:configserver:http://localhost:8888
   cloud:
     config:
       uri: http://localhost:8888
-      fail-fast: true
-      retry:
-        initial-interval: 1000
-        max-attempts: 6
+      fail-fast: false
+  datasource:
+    url: jdbc:postgresql://localhost:5432/company_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  port: 8082
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true

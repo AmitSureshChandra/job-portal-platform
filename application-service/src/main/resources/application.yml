@@ -1,15 +1,15 @@
 spring:
   application:
-    name: job-service
+    name: application-service
   config:
     import: optional:configserver:http://localhost:8888
   cloud:
     config:
       uri: http://localhost:8888
-      fail-fast: true
-      retry:
-        initial-interval: 1000
-        max-attempts: 6
+      fail-fast: false
+#      retry:
+#        initial-interval: 1000
+#        max-attempts: 6
 
   datasource:
     url: jdbc:postgresql://localhost:5432/company_db
@@ -25,7 +25,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
 server:
-  port: 8083
+  port: 8084
 
 eureka:
   client:

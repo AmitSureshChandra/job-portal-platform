@@ -27,12 +27,12 @@
   - [x] Link jobs to companies
   - [x] Job status management
 
-- [ ] **application-service** - Job applications and tracking
-  - [ ] Application entity (user, job, status, applied date)
-  - [ ] Apply for job API
-  - [ ] Application status tracking
-  - [ ] Application history for users
-  - [ ] Application management for recruiters
+- [x] **application-service** - Job applications and tracking
+  - [x] Application entity (user, job, status, applied date)
+  - [x] Apply for job API
+  - [x] Application status tracking
+  - [x] Application history for users
+  - [x] Application management for recruiters
 
 ### Phase 3: Advanced Features
 - [ ] **search-service** - Advanced search using Elasticsearch
@@ -53,20 +53,20 @@
   - [ ] Rate limiting
   - [ ] Request/response logging
 
-## Current Focus: Application Service
+## Current Focus: Search Service
 
 ### Next Steps:
-1. Create application-service module structure
-2. Implement Application entity and repository
-3. Create job application APIs
-4. Add application tracking functionality
-5. Link applications to users and jobs
+1. Create search-service module structure
+2. Implement Elasticsearch integration
+3. Create advanced job search APIs
+4. Add search analytics and suggestions
+5. Implement full-text search capabilities
 
 ## Database Schema Progress:
 - [x] Users table (user-service)
 - [x] Companies table (company-service)
 - [x] Jobs table (job-service)
-- [ ] Applications table (application-service)
+- [x] Applications table (application-service)
 
 ## API Endpoints Completed:
 - [x] POST /api/users/register
@@ -87,5 +87,11 @@
 - [x] GET /api/jobs/active
 - [x] PUT /api/jobs/{id}/status
 
-## API Endpoints Planned:
-- [ ] POST /api/applications/apply
+## API Endpoints Completed:
+- [x] POST /api/applications/apply
+- [x] GET /api/applications/{id}
+- [x] GET /api/applications/user/{userId}
+- [x] GET /api/applications/job/{jobId}
+- [x] GET /api/applications/company/{companyId}
+- [x] PUT /api/applications/{id}/status
+- [x] PUT /api/applications/{id}/withdraw

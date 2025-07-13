@@ -19,3 +19,9 @@ management:
     web:
       exposure:
         include: health,info
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.cloud.config: DEBUG
+    root: INFO
